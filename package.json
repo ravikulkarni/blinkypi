@@ -1,0 +1,10 @@
+{
+  "name"         : "blinkypi",
+  "version"      : "0.0.0",
+  "description"  : "Status indicator.",
+  "main"         : "server.js",
+  "author"       : "Scotch",
+  "dependencies" : {
+    "serialport": "*"
+    }
+}
