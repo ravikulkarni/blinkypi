@@ -31,3 +31,20 @@ Then run the command below
 
 npm install -g node-gyp 
 
+## Installing blinkypi source code.
+
+Install first git on raspberry pi using following command
+
+sudo apt-get install git
+
+Then clone this repository and cd into blinkypi directory.
+
+Then run the following command
+
+npm install
+
+## Running the blinkypi code
+
+Use the command below to start the blinkypi
+
+node blinkyserver.js
