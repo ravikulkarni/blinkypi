@@ -25,3 +25,9 @@ chmod a+rw /opt/node/bin
 
 echo 'PATH=$PATH:/opt/node/bin' > /etc/profile.d/node.sh
 
+exit out of shell and login again to get the new settings.
+
+Then run the command below
+
+npm install -g node-gyp 
+
