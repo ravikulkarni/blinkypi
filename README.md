@@ -1,6 +1,10 @@
 ## blinkypi
 
-This project is to control Blinky Tape (http://blinkinlabs.com/blinkytape/) with Raspberry Pi
+Imagine you want to have visual indicators in your team area that could be seen from all sides. There is no space and budget to buy those many TVs, or you have a large TV and need continuous indication of status from anywhere in the room. Your team is responsible for multiple projects and has more than one Jenkin jobs. What do you do?
+
+You use our project "Blinky Pi". It costs just over $100 to build. The project uses blinky tape (http://blinkinlabs.com/blinkytape) and Raspberry Pi (http://www.raspberrypi.org) to create a visual indicator that can show you current status of Jenkin jobs. 
+
+A node server is running on Raspberry Pi which controls the individual LEDs on the Blinky tape. 
 
 ## Installing node.js on Raspberry Pi :
 On Raspberry Pi shell, run the following commands one after another
