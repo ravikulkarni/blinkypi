@@ -69,4 +69,6 @@ gpio readall
 
 Use the command below to start the blinkypi
 
+```
 node blinkyserver.js
+```
