@@ -61,10 +61,10 @@ cd wiringPi
 
 Use the following command to test
 
-`
+```
 gpio -v
 gpio readall
-`
+```
 
 ## Running the blinkypi code
 
