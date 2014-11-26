@@ -40,13 +40,8 @@ Install first git on raspberry pi using following command
 sudo apt-get install git
 ```
 
-Then clone this repository and cd into blinkypi directory.
+Then clone this repository.
 
-Then run the following command
-
-```
-npm install
-```
 
 ## Installing WiringPi on Raspberry Pi
 
