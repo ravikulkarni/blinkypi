@@ -19,7 +19,9 @@ serialPort.on('open', function() {
     blinkyTape.sendUpdate();
 });
 
+//Turn on green and turn off red indicator
 pibrella.turnOn("green");
+pibrella.turnOff("red");
 
 http.createServer(function(req,resp) {
     var url = require("url");
