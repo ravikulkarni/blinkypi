@@ -62,8 +62,9 @@ gpio readall
 
 ## Running the blinkypi code
 
-Use the command below to start the blinkypi
+Use the command below to start the blinkypi 
 
 ```
-node blinkyserver.js
+cd blinkypi
+node blinkypiserver.js
 ```
