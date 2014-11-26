@@ -5,6 +5,7 @@
   "main"         : "server.js",
   "author"       : "Scotch",
   "dependencies" : {
-    "serialport": "*"
-    }
+    "serialport": "*",
+    "forever-monitor"   : "*"
+    }		
 }
