@@ -167,7 +167,7 @@ var BlinkyTape = function(port, ledCount) {
 
     BlinkyTape.yellow = function() {
 	return [254, 254,0];
-v    }
+    }
     //End Color Functions
 
 }

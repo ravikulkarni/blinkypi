@@ -5,6 +5,9 @@ var serialPort = new SerialPort(SERIALPORT, {
     baudrate: 115200
 }, true); // this is the openImmediately flag 
 
+var Pibrella = require("./pibrella.js").Pibrella
+var pibrella = new Pibrella();
+
 var BlinkyTape = require("./blinkytape.js").BlinkyTape;
 
 serialPort.on('open', function() {
@@ -16,6 +19,7 @@ serialPort.on('open', function() {
     blinkyTape.sendUpdate();
 });
 
+pibrella.turnOn("green");
 
 http.createServer(function(req,resp) {
     var url = require("url");
@@ -25,6 +29,8 @@ http.createServer(function(req,resp) {
     var countLed = querystring["count"];
     if(countLed && startLed && color){
 
+	pibrella.blink("amber");
+	
 	var r = 0;
 	var g = 0;
 	var b = 0;
