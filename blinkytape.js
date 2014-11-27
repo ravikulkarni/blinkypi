@@ -1,7 +1,7 @@
-var BlinkyTape = function(port, ledCount) {
+var BlinkyTape = function(port, pibrella, ledCount) {
     var FILEPATH = "/home/pi/blinkystate.txt";
-    var LOCK = "/tmp/blinkylock.txt";
-
+    var BLINKYLOCK = "/tmp/blinkylock.txt";
+    
     //Ensure this is Singleton.
     if ( arguments.callee._singletonInstance )
 	return arguments.callee._singletonInstance;
@@ -9,6 +9,7 @@ var BlinkyTape = function(port, ledCount) {
 
     BlinkyTape.ledCount = ledCount;
     BlinkyTape.serialPort = port;
+    BlinkyTape.pibrella = pibrella;
 
     //First time you start, initialize the data to have all 0s which means no lights turned on.
     var ledStatus = new Array(BlinkyTape.ledCount);
@@ -32,36 +33,29 @@ var BlinkyTape = function(port, ledCount) {
     //Functions to operate on Blinky Tape. When the blinkyserver is started the port is opened and kept open. 
     //The Blinky Tape serial port is never closed.
 
-    //Close Blinky Tape. 
-    var closeBlinkyTape = function closeBlinkyTape()  {
-	BlinkyTape.serialPort.close(function() {
-	    console.log("Serial Port closed");
-	});
-    }
-
     //Drain Blinky Tape.
     var drainBlinkyTape = function drainBlinkyTape()  {
-	BlinkyTape.serialPort.drain(function() {
+	var error = null;
+	BlinkyTape.serialPort.drain(function(err) {
+	    if(err) {
+		console.log("Error when draining to Blinky Tape");
+		BlinkyTape.pibrella.blink("red");
+		error = new Error("Error when draining to Blinky Tape");
+	    } else {
+		//Remove the lock 
+		try {
+		    fs.unlinkSync(BLINKYLOCK);
+		} catch(ex) {
+		    //Do nothing
+		}
+	    }
 	    console.log("Serial Port drained");
+	    //Confirm with indicator blinking.
+	    BlinkyTape.pibrella.blink("amber");
+	    next(error, -1);
 	});
     }
     
-    //Open Blinky Tape
-    var openBlinkyTape = function openBlinkyTape() {
-	console.log("Opening blinky tape.");	
-	var SerialPort = require("serialport").SerialPort
-	BlinkyTape.serialPort = new SerialPort(SERIALPORT, {
-	    baudrate: 115200
-	}, false); // this is the openImmediately flag [default is true]
- 	BlinkyTape.serialPort.open(function (error) {
-	    if ( error ) {
-		console.log('failed to open: '+error);
-	    } else {
-		next(null);
-	    }
-	});
-    }
-
     //Get byte array from the Array of Arrays. Append 255 to store the state into Blinky Tape.
     var getLedStatusByteArray = function() {
 	var ldst = [];
@@ -74,7 +68,9 @@ var BlinkyTape = function(port, ledCount) {
     //Write to Blinky Tape.
     var writeToBlinkyTape = function writeToBlinkyTape() {
 	var iterationCount = [];
-	var count = 2
+	var count = 2;
+	var error = null;
+
 	for(var i=0; i< count; i++) {
 	    console.log("Writing to serial port:" + i);
 	    var ldst = getLedStatusByteArray();
@@ -83,10 +79,12 @@ var BlinkyTape = function(port, ledCount) {
 	    BlinkyTape.serialPort.write(new Buffer(getLedStatusByteArray()), function(err, results) {
 		if(err){
 		    console.log('Error when writing ' + i + ":" + err);
+		    BlinkyTape.pibrella.blink("red");
+		    error =  new Error('Error when writing ' + i + ":" + err);
 		} else {
 		    iterationCount.push(i);
 		    if(iterationCount.length == count) {
-			next(null,2);
+			next(error,2);
 		    }
 		}
 	    });
@@ -104,15 +102,19 @@ var BlinkyTape = function(port, ledCount) {
 	} catch (ex) {
 	    //State file does not exists. Do nothing.
 	}
-	next(null);
     }
 
     //Save the blinky tape state into the file.
     var saveBlinkyState = function saveBlinkyState() {
 	var fs=require("fs");
-	fs.writeFileSync(FILEPATH, JSON.stringify(ledStatus)); 
+	var err = null;
+	try {
+	    fs.writeFileSync(FILEPATH, JSON.stringify(ledStatus)); 
+	} catch(ex) {
+	    err = new Error("Error when saving Blinky State.");
+	}
 	console.log("Done Writing to a file.");
-	next(null, 1);
+	next(err, 1);
     }
 
     //Array to sequence method execution.
@@ -124,8 +126,10 @@ var BlinkyTape = function(port, ledCount) {
 
     //Function which calls methods to operate on BlinkyTape serially.
     function next(err, index) {
-	console.log("Next called");
 	if(err) throw err;
+	if(index == -1) return;
+
+	console.log("Next called");
 	console.log(BlinkyTape.tasks);
 	
 	var currentTask = BlinkyTape.tasks[index];

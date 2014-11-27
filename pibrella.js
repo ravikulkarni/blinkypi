@@ -43,9 +43,18 @@ var Pibrella = function() {
     this.blink = function(color){
 	console.log("Blinking " + color + " light.");
 	exec("gpio mode "+ Pibrella.pintable[color] + " out", function(err,stdout,stderr) {
+	    if(err) {
+		return new Error("Error when setting output mode with gpio for pin " + Pibrella.pintable[color]);
+	    }
 	    exec("gpio write "+ Pibrella.pintable[color] +" 1", function(err,stdout,stderr) {
-		setTimeout(function(){
+		if(err) {
+		    return new Error("Error when writing 1 with gpio to pin " + Pibrella.pintable[color]);
+		}
+		setTimeout(function(err){
 		    exec("gpio write "+ Pibrella.pintable[color] +" 0", function(err,stdout,stderr) {
+			if(err) {
+			    return new Error("Error when writing 0 with gpio to pin " + Pibrella.pintable[color]);
+			}
 		    });
 		}, 250);
 	    });
@@ -56,6 +65,9 @@ var Pibrella = function() {
     this.turnOn = function(color){
 	exec("gpio mode "+ Pibrella.pintable[color] + " out", function(err,stdout,stderr) {
 	    exec("gpio write "+ Pibrella.pintable[color] +" 1", function(err,stdout,stderr) {
+		if(err) {
+		    return new Error("Error when writing 1 with gpio to pin " + Pibrella.pintable[color]);
+		}
 	    });
 	});
     }
@@ -63,6 +75,9 @@ var Pibrella = function() {
     this.turnOff = function(color){
 	exec("gpio mode "+ Pibrella.pintable[color] + " out", function(err,stdout,stderr) {
 	    exec("gpio write "+ Pibrella.pintable[color] +" 0", function(err,stdout,stderr) {
+		if(err) {
+		    return new Error("Error when writing 0 with gpio to pin " + Pibrella.pintable[color]);
+		}
 	    });
 	});
     }
