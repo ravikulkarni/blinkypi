@@ -77,7 +77,7 @@ cd blinkypi
 node blinkypiserver.js
 ```
 
-## Indicators and Button use on Pibrella board.
+## Indicators and Button on Pibrella board.
 **Red Button:** Pressing this button lights up all 3 indicators and then reboots the Raspberry Pi 
 
 **Red:** Error when execution. Reboot the Raspberry Pi using the red button.
