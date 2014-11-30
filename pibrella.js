@@ -23,62 +23,71 @@ var Pibrella = function() {
         "In A":"13",
         "Red Button":"14",
     }
-    Pibrella.tablepin = {
-    // WiringPi : Physical
-        "0":"amber",
-        "1":"buzzer",
-        "2":"red",
-        "3":"E",
-        "4":"F",
-        "5":"G",
-        "6":"H",
-        "7":"green",
-        "10":"C",
-        "11":"B",
-        "12":"D",
-        "13":"A",
-        "14":"R",
-    }
-    
+
+    exec("gpio mode 0 out; gpio mode 2 out; gpio mode 7 out; gpio mode 14 in", function(err,stdout,stderr) {
+	console.log("Mode set for gpio pins.");
+    });
+
     this.blink = function(color){
+	console.log("Color:" + color.toUpperCase());
+	if(!(color.toUpperCase() === "RED" || color.toUpperCase() === "AMBER" || color.toUpperCase() === "GREEN")) {
+	    return;
+	}
 	console.log("Blinking " + color + " light.");
-	exec("gpio mode "+ Pibrella.pintable[color] + " out", function(err,stdout,stderr) {
+	exec("gpio mode" + Pibrella.pintable[color]  +"out; gpio write "+ Pibrella.pintable[color] +" 1", function(err,stdout,stderr) {
 	    if(err) {
-		return new Error("Error when setting output mode with gpio for pin " + Pibrella.pintable[color]);
+		return new Error("Error when writing 1 with gpio to pin " + Pibrella.pintable[color]);
 	    }
-	    exec("gpio write "+ Pibrella.pintable[color] +" 1", function(err,stdout,stderr) {
-		if(err) {
-		    return new Error("Error when writing 1 with gpio to pin " + Pibrella.pintable[color]);
-		}
-		setTimeout(function(err){
-		    exec("gpio write "+ Pibrella.pintable[color] +" 0", function(err,stdout,stderr) {
-			if(err) {
-			    return new Error("Error when writing 0 with gpio to pin " + Pibrella.pintable[color]);
-			}
-		    });
-		}, 250);
-	    });
+	    setTimeout(function(err){
+		exec("gpio write "+ Pibrella.pintable[color] +" 0", function(err,stdout,stderr) {
+		    if(err) {
+			return new Error("Error when writing 0 with gpio to pin " + Pibrella.pintable[color]);
+		    }
+		});
+	    }, 250);
 	});
     }
 		    
 
     this.turnOn = function(color){
-	exec("gpio mode "+ Pibrella.pintable[color] + " out", function(err,stdout,stderr) {
-	    exec("gpio write "+ Pibrella.pintable[color] +" 1", function(err,stdout,stderr) {
-		if(err) {
-		    return new Error("Error when writing 1 with gpio to pin " + Pibrella.pintable[color]);
-		}
-	    });
+	if(!(color.toUpperCase() === "RED" || color.toUpperCase() === "AMBER" || color.toUpperCase() === "GREEN")) {
+	    return;
+	}
+	exec("gpio write "+ Pibrella.pintable[color] +" 1", function(err,stdout,stderr) {
+	    if(err) {
+		return new Error("Error when writing 1 with gpio to pin " + Pibrella.pintable[color]);
+	    }
 	});
     }
 
     this.turnOff = function(color){
-	exec("gpio mode "+ Pibrella.pintable[color] + " out", function(err,stdout,stderr) {
-	    exec("gpio write "+ Pibrella.pintable[color] +" 0", function(err,stdout,stderr) {
-		if(err) {
-		    return new Error("Error when writing 0 with gpio to pin " + Pibrella.pintable[color]);
-		}
-	    });
+	if(!(color.toUpperCase() === "RED" || color.toUpperCase() === "AMBER" || color.toUpperCase() === "GREEN")) {
+	    return;
+	}
+
+	exec("gpio write "+ Pibrella.pintable[color] +" 0", function(err,stdout,stderr) {
+	    if(err) {
+		return new Error("Error when writing 0 with gpio to pin " + Pibrella.pintable[color]);
+	    }
+	});
+    }
+
+    this.readButton = function(callback) {
+	var state = 0;
+	exec("gpio read 14", function(err,stdout,stderr) {
+	    if(err) {
+		return new Error("Error when reading button ");
+	    }
+	    state = Number(stdout);
+	    callback(err, state);
+	});
+    }
+
+    this.turnIndicators = function(red, green, amber) {
+	exec("gpio write 2 "+ red + " ; gpio write 7 " + green + " ; gpio write 0 " + amber + ";", function(err,stdout,stderr) {
+	    if(err) {
+		return new Error("Error when writing 0 with gpio to pin " + Pibrella.pintable[color]);
+	    }
 	});
     }
 

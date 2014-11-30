@@ -45,6 +45,7 @@ var BlinkyTape = function(port, pibrella, ledCount) {
 		//Remove the lock 
 		try {
 		    fs.unlinkSync(BLINKYLOCK);
+		    console.log("Removed the lock file.");
 		} catch(ex) {
 		    //Do nothing
 		}
@@ -171,6 +172,10 @@ var BlinkyTape = function(port, pibrella, ledCount) {
 
     BlinkyTape.yellow = function() {
 	return [254, 254,0];
+    }
+    
+    BlinkyTape.off = function() {
+	return [0, 0,0];
     }
     //End Color Functions
 

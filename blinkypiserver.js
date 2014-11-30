@@ -14,10 +14,25 @@ var BlinkyTape = require("./blinkytape.js").BlinkyTape;
 process.on('uncaughtException', function(err) {
     // handle the error safely
     console.log(err);
-    pibrella.turnOn("red");
-    pibrella.turnOff("green");
+    pibrella.turnIndicator(1,0,0);
 });
 
+setInterval(function() { 
+    //Check of the button is pressed.
+    pibrella.readButton(function(err,buttonState) {
+	if(err) {
+	    console.log("Error reading the button.");
+	}
+	if(buttonState == 1) {
+	    //Turn on all three indicators
+	    console.log("Button Pressed");
+	    pibrella.turnIndicators(1,1,1);
+	    //Restart the Raspberry Pi
+	    var exec = require('child_process').exec;
+	    exec("sudo shutdown -r now", function(err,stdout,stderr) {});
+	}
+    });
+},200);
 
 serialPort.on('open', function() {
     console.log("Serial Port Opened");
@@ -28,9 +43,10 @@ serialPort.on('open', function() {
     blinkyTape.sendUpdate();
 });
 
+
 //Turn on green and turn off red indicator
-pibrella.turnOn("green");
-pibrella.turnOff("red");
+pibrella.turnIndicators(0, 1, 0);
+
 var fs=require("fs");
 
 http.createServer(function(req,resp) {
@@ -42,8 +58,11 @@ http.createServer(function(req,resp) {
     if(countLed && startLed && color){
 	//If the lock file exists, then there is an error. Remove the file and throw error.
 	if(fs.existsSync(BLINKYLOCK)) {
-	    fs.unlinkSys(BLINKYLOCK);
-	    throw new Error("There may be issues with previous data transfer.");
+//	    fs.unlinkSys(BLINKYLOCK);
+//	    throw new Error("There may be issues with previous data transfer.");
+	    console.log("There may be issues with previous data transfer.");
+	    pibrella.turnIndicators(1,0,0);
+	    return;
 	}
 	//Create lock file
 	var err = null;
