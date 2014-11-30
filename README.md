@@ -90,7 +90,7 @@ node blinkypiserver.js
 Control individual LEDs on Blinkytape using http request in format below
 
 ```
-curl --GET "http://raspberrypi-ip-address:8080?color=<color>&startled=<start-led-no>&count=<count>"
+"http://raspberrypi-ip-address:8080?color=<color>&startled=<start-led-no>&count=<count>"
 ```
 
 The LEDs are numbered from 0 to 59
