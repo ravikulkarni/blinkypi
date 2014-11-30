@@ -60,7 +60,15 @@ gpio -v
 gpio readall
 ```
 
-## Running the blinkypi code
+## Setting up Raspberry Pi to auto start Blinkypi server on boot.
+
+Add the following lines to /etc/rc.local file on the Raspberry Pi
+```
+printf "Starting Blinkypi Server"
+su pi -c '/opt/node/bin/node /path/to/blinkypiserver.js >/tmp/blinkypiserver.out 2>&1'
+```
+
+## Running the blinkypi code from shell
 
 Use the command below to start the blinkypi 
 
@@ -78,8 +86,12 @@ Blinking Amber: http request received and processed.
 ## Usage
 Control individual LEDs on Blinkytape using http request in format below
 
+```
 curl --GET "http://raspberrypi-ip-address:8080?color=<color>&startled=<start-led-no>&count=<count>"
+```
 
 The LEDs are numbered from 0 to 59
+
 Colors allowed are "green", "red", "blue", "amber"
+
 Count includes the starting LED number. For example, if the <count> is 1, then the LED at <start-led-no> will be turned on.
