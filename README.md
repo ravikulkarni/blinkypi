@@ -97,4 +97,4 @@ The LEDs are numbered from 0 to 59
 
 Colors allowed are "green", "red", "blue", "amber"
 
-Count includes the starting LED number. For example, if the *count8 is 1, then the LED at *start-led-no* will be turned on.
+Count includes the starting LED number. For example, if the *count* is 1, then the LED at *start-led-no* will be turned on.
