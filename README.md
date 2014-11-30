@@ -79,8 +79,11 @@ node blinkypiserver.js
 
 ## Indicators and Button use on Pibrella board.
 Red Button: Pressing this button lights up all 3 indicators and then reboots the Raspberry Pi 
-Red: Error when execution. Reboot the Raspberry Pi using the red button
+
+Red: Error when execution. Reboot the Raspberry Pi using the red button.
+
 Green: Blinky pi server started and ready to receive requests.
+
 Blinking Amber: http request received and processed. 
 
 ## Usage
