@@ -6,6 +6,7 @@
   "author"       : "Scotch",
   "dependencies" : {
     "serialport": "*",
-    "forever-monitor"   : "*"
+    "forever-monitor"   : "*",
+    "jenkins-api": "*"
     }		
 }

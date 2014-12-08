@@ -151,6 +151,23 @@ var BlinkyTape = function(port, pibrella, ledCount) {
 	console.log(JSON.stringify(ledStatus));
     }
 
+    this.lock = function() {
+	//Create lock file
+	var err = null;
+	try {
+	    fs.writeFileSync(BLINKYLOCK, "lock"); 
+	    console.log("Done creating a lock file.");
+	} catch(ex) {
+	    err = new Error("Error when creating lock.");
+	    console.log("Error when creating lock.");
+	    throw err;
+	}
+    }
+
+    this.lockExists = function() {
+	return fs.existsSync(BLINKYLOCK);
+    }
+
     //Send the updated value to Blinky Tape
     this.sendUpdate = function() {
 	console.log("Sending updates.");

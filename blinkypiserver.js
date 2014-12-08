@@ -1,6 +1,5 @@
 var http = require('http');
 var SERIALPORT = "/dev/ttyACM0";
-var BLINKYLOCK = "/tmp/blinkylock.txt";
 var SerialPort = require("serialport").SerialPort;
 var serialPort = new SerialPort(SERIALPORT, {
     baudrate: 115200
@@ -34,6 +33,12 @@ setInterval(function() {
     });
 },200);
 
+setInterval(function() { 
+    //Check of the button is pressed.
+    console.log("Checking job status");
+    
+},1000*60*5);
+
 serialPort.on('open', function() {
     console.log("Serial Port Opened");
 
@@ -55,24 +60,13 @@ http.createServer(function(req,resp) {
     var color = querystring["color"];
     var startLed = querystring["startled"];
     var countLed = querystring["count"];
+    var message = "No changes made.";
     if(countLed && startLed && color){
 	//If the lock file exists, then there is an error. Remove the file and throw error.
-	if(fs.existsSync(BLINKYLOCK)) {
-//	    fs.unlinkSys(BLINKYLOCK);
-//	    throw new Error("There may be issues with previous data transfer.");
+	if(blinkyTape.lockExists()) {
 	    console.log("There may be issues with previous data transfer.");
 	    pibrella.turnIndicators(1,0,0);
 	    return;
-	}
-	//Create lock file
-	var err = null;
-	try {
-	    fs.writeFileSync(BLINKYLOCK, "lock"); 
-	    console.log("Done creating a lock file.");
-	} catch(ex) {
-	    err = new Error("Error when creating lock.");
-	    console.log("Error when creating lock.");
-	    throw err;
 	}
 
 	var r = 0;
@@ -85,6 +79,8 @@ http.createServer(function(req,resp) {
 
 	console.log("r:" + r + " g:" + g + " b:" + b);
 	console.log("Starting at LED " + startLed + " making " +countLed + " LEDs " + color);
+	message = "Starting at LED " + startLed + " making " +countLed + " LEDs " + color;
+	blinkyTape.lock();
 	for(i = startLed ; i< (parseInt(startLed) + parseInt(countLed)) ; i++) {
 	    console.log("i:" + i);
 	    blinkyTape.setLedColor(startLed,r,g,b );
@@ -93,7 +89,7 @@ http.createServer(function(req,resp) {
     } 
     
     resp.writeHead(200, {"Content-Type": "text/html"});
-    resp.write("LED turned on");
+    resp.write(message);
     resp.end();
 }).listen(8080);
 
