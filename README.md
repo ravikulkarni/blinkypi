@@ -2,7 +2,13 @@
 
 Imagine you want to have visual indicators in your team area that could be seen from all sides. There is no space and budget to buy those many TVs, or you have a large TV and need continuous indication of status from anywhere in the room. Your team is responsible for multiple projects and has more than one Jenkin jobs. What do you do?
 
-You use our project "Blinky Pi". It costs just over $100 to build. The project uses blinky tape (http://blinkinlabs.com/blinkytape) and Raspberry Pi (http://www.raspberrypi.org) to create a visual indicator that can show you current status of Jenkin jobs. 
+You use our project "Blinky Pi". It costs just over $100 to build. 
+The project uses 
+* Blinky Tape (http://blinkinlabs.com/blinkytape) 
+* Raspberry Pi (http://www.raspberrypi.org) 
+* Pibrella board (http://pibrella.com)
+
+to create a visual indicator that can show you current status of Jenkin jobs. 
 
 A node server is running on Raspberry Pi which controls the individual LEDs on the Blinky tape. 
 
@@ -87,6 +93,8 @@ node blinkypiserver.js
 **Blinking Amber:** http request received and processed. 
 
 ## Usage
+
+### Push Mode
 Control individual LEDs on Blinkytape using http request in format below
 
 ```
