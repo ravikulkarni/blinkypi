@@ -1,5 +1,6 @@
 var http = require('http');
 var SERIALPORT = "/dev/ttyACM0";
+
 var SerialPort = require("serialport").SerialPort;
 var serialPort = new SerialPort(SERIALPORT, {
     baudrate: 115200
@@ -9,11 +10,16 @@ var Pibrella = require("./pibrella.js").Pibrella
 var pibrella = new Pibrella();
 
 var BlinkyTape = require("./blinkytape.js").BlinkyTape;
+var blinkyTape = new BlinkyTape(serialPort, pibrella, 60);
+
+var JenkinJob = require("./jenkinjob.js").JenkinJob;
+var jenkinJob = new JenkinJob(pibrella, blinkyTape);
 
 process.on('uncaughtException', function(err) {
     // handle the error safely
     console.log(err);
-    pibrella.turnIndicator(1,0,0);
+    pibrella.turnIndicators(1,0,0);
+    throw err;
 });
 
 setInterval(function() { 
@@ -33,23 +39,23 @@ setInterval(function() {
     });
 },200);
 
-setInterval(function() { 
-    //Check of the button is pressed.
-    console.log("Checking job status");
-    
-},1000*60*5);
-
 serialPort.on('open', function() {
     console.log("Serial Port Opened");
 
-    blinkyTape = new BlinkyTape(serialPort, pibrella, 60);
+   //blinkyTape = new BlinkyTape(serialPort, pibrella, 60);
     console.log("Led Count:" + blinkyTape.getLedCount());
     console.log("Port:" + blinkyTape.getPort());
     blinkyTape.sendUpdate();
 });
 
+setInterval(function() { 
+    //Check of the button is pressed.
+    console.log("Checking job status");
+//    jenkinJob.process();    
+},1000*60*5);
 
 //Turn on green and turn off red indicator
+jenkinJob.process();    
 pibrella.turnIndicators(0, 1, 0);
 
 var fs=require("fs");

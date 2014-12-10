@@ -130,9 +130,6 @@ var BlinkyTape = function(port, pibrella, ledCount) {
 	if(err) throw err;
 	if(index == -1) return;
 
-	console.log("Next called");
-	console.log(BlinkyTape.tasks);
-	
 	var currentTask = BlinkyTape.tasks[index];
 	console.log(currentTask);
 	if(currentTask) {
