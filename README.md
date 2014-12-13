@@ -71,8 +71,9 @@ gpio readall
 Add the following lines to /etc/rc.local file on the Raspberry Pi
 ```
 printf "Starting Blinkypi Server"
-su pi -c '/opt/node/bin/node /path/to/blinkypiserver.js >/tmp/blinkypiserver.out 2>&1'
+su pi -c '/opt/node/bin/node /path/to/blinkypiserver.js | logger -t blinkypi 2>&1'
 ```
+The console is logged in /var/log/messages
 
 ## Running the blinkypi code from shell
 
@@ -106,3 +107,25 @@ The LEDs are numbered from 0 to 59
 Colors allowed are "green", "red", "blue", "amber"
 
 Count includes the starting LED number. For example, if the *count* is 1, then the LED at *start-led-no* will be turned on.
+
+### Pull Mode
+
+Create a blinkypi.config in format below in the blinkpi directory.
+```
+[
+	{
+		"startLed"	: 0,
+		"count"		: 1,
+		"jenkinurl"	: "http://jenkin.server.com:8080/",
+		"jenkinjob"	: "Job1"
+	},
+	{
+		"startLed"	: 1,
+		"count"		: 1,
+		"jenkinurl"	: "http://jenkin.server.com:8080/",
+		"jenkinjob"	: "Job2"
+	}
+]
+```
+
+blinkypiserver will query the jenkin job sequentially and change the color of LEDs according to the status of job.
