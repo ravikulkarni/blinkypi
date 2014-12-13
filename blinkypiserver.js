@@ -51,8 +51,12 @@ serialPort.on('open', function() {
 setInterval(function() { 
     //Check of the button is pressed.
     console.log("Checking job status");
+    jenkinJob.readConfig();
     jenkinJob.process();    
 },1000*60*5);
+
+jenkinJob.readConfig();
+jenkinJob.process();    
 
 //Turn on green and turn off red indicator
 pibrella.turnIndicators(0, 1, 0);
