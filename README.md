@@ -12,6 +12,8 @@ to create a visual indicator that can show you current status of Jenkin jobs.
 
 A node server is running on Raspberry Pi which controls the individual LEDs on the Blinky tape. 
 
+![alt tag](https://github.com/ravirkulkarni/blinkypi/blob/master/images/Blinkypi2.JPG)
+
 ![alt tag](https://github.com/ravirkulkarni/blinkypi/blob/master/images/Blinkypi1.JPG)
 
 # Installation Instructions
